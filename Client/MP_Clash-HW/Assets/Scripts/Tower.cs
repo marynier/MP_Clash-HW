@@ -11,10 +11,12 @@ public class Tower : MonoBehaviour, IHealth
     {
         health.OnDied += Die;
     }
+
     private void OnDestroy()
     {
         health.OnDied -= Die;
     }
+
     private void Die()
     {
         MapInfo.Instance.RemoveTower(this);

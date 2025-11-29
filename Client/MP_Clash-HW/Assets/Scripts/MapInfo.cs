@@ -1,11 +1,11 @@
 ﻿using System.Collections.Generic;
-using System.Linq;
 using UnityEngine;
 
 public class MapInfo : MonoBehaviour
 {
     #region SingletonOneScene
     public static MapInfo Instance { get; private set; }
+
     private void Awake()
     {
         if (Instance)
@@ -15,6 +15,7 @@ public class MapInfo : MonoBehaviour
         }
         Instance = this;
     }
+
     private void OnDestroy()
     {
         if(Instance == this) Instance = null;
@@ -58,11 +59,13 @@ public class MapInfo : MonoBehaviour
 
         return nearest;
     }
+
     public void RemoveTower(Tower tower)
     {
         if (_enemyTowers.Contains(tower)) _enemyTowers.Remove(tower);
         if (_playerTowers.Contains(tower)) _playerTowers.Remove(tower);
     }
+
     public void RemoveUnit(Unit unit)
     {
         if (_enemyUnits.Contains(unit)) _enemyUnits.Remove(unit);

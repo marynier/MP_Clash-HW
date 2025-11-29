@@ -31,6 +31,7 @@ public class Unit : MonoBehaviour, IHealth
 
         health.OnDied += Die;
     }
+
     private void OnDestroy()
     {
         if (health != null)
@@ -64,6 +65,7 @@ public class Unit : MonoBehaviour, IHealth
 
         _currentState.Init();
     }
+
     private void Die()
     {
         SetState(UnitStateType.Default);
@@ -75,6 +77,7 @@ public class Unit : MonoBehaviour, IHealth
 #if UNITY_EDITOR
     [Space(24)]
     [SerializeField] private bool _debug = false;
+
     private void OnDrawGizmos()
     {
         if (_debug == false) return;

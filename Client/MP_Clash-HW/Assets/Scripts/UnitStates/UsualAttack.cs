@@ -49,7 +49,6 @@ public class UsualAttack : UnitState
 
     public override void Finish()
     {
-
     }
 
     private bool TryFindTarget(out float stopAttackDistance)

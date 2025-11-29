@@ -1,5 +1,4 @@
-﻿using Unity.VisualScripting;
-using UnityEditor;
+﻿using UnityEditor;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -10,7 +9,6 @@ public class NavMeshChase : UnitState
     private bool _targetIsEnemy;
     private Unit _targetUnit;
     private float _startAttackDistance = 0;
-
 
     public override void Constructor(Unit unit)
     {
