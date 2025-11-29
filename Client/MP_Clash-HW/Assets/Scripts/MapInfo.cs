@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class MapInfo : MonoBehaviour
@@ -56,5 +57,15 @@ public class MapInfo : MonoBehaviour
         }
 
         return nearest;
+    }
+    public void RemoveTower(Tower tower)
+    {
+        if (_enemyTowers.Contains(tower)) _enemyTowers.Remove(tower);
+        if (_playerTowers.Contains(tower)) _playerTowers.Remove(tower);
+    }
+    public void RemoveUnit(Unit unit)
+    {
+        if (_enemyUnits.Contains(unit)) _enemyUnits.Remove(unit);
+        if (_playerUnits.Contains(unit)) _playerUnits.Remove(unit);
     }
 }

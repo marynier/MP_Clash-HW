@@ -1,10 +1,12 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class Health : MonoBehaviour
 {
     [field: SerializeField] public float max { get; private set; } = 10f;
     [SerializeField] private HealthUI _ui;
     private float _current;
+    public event Action OnDied;
 
     private void Start()
     {
@@ -15,14 +17,18 @@ public class Health : MonoBehaviour
     public void ApplyDamage(float value)
     {
         _current -= value;
-        if (_current < 0) _current = 0;
+        if (_current <= 0)
+        {
+            _current = 0;
+            OnDied?.Invoke();
+        }                
 
-        UpdateHP();
+        UpdateUI();
 
         Debug.Log($"Объект {name}: было {_current + value}, стало {_current}");
     }
 
-    private void UpdateHP()
+    private void UpdateUI()
     {
         _ui.UpdateHealth(max, _current);
     }

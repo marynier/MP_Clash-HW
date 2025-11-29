@@ -3,7 +3,7 @@
 [RequireComponent(typeof(UnitParameters), typeof(Health))]
 public class Unit : MonoBehaviour, IHealth
 {
-    [field: SerializeField] public Health health {  get; private set; }
+    [field: SerializeField] public Health health { get; private set; }
     [field: SerializeField] public bool isEnemy { get; private set; } = false;
     [field: SerializeField] public UnitParameters parameters;
 
@@ -28,6 +28,13 @@ public class Unit : MonoBehaviour, IHealth
 
         _currentState = _defaultState;
         _currentState.Init();
+
+        health.OnDied += Die;
+    }
+    private void OnDestroy()
+    {
+        if (health != null)
+            health.OnDied -= Die;
     }
 
     private void Update()
@@ -56,6 +63,13 @@ public class Unit : MonoBehaviour, IHealth
         }
 
         _currentState.Init();
+    }
+    private void Die()
+    {
+        SetState(UnitStateType.Default);
+        MapInfo.Instance.RemoveUnit(this);
+
+        Destroy(gameObject);
     }
 
 #if UNITY_EDITOR
