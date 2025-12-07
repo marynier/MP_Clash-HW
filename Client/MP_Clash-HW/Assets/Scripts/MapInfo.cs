@@ -99,13 +99,7 @@ public class MapInfo : MonoBehaviour
     {
         List<Tower> towers = enemy ? _enemyTowers : _playerTowers;
         return GetNearest(currentPosition, towers, out float distance);
-    }
-
-    public Tower GetNearestAllyTower(in Vector3 currentPosition, bool isEnemyUnit)
-    {
-        List<Tower> towers = isEnemyUnit ? _enemyTowers : _playerTowers ;
-        return GetNearest(currentPosition, towers, out float distance);
-    }
+    }   
 
     private T GetNearest<T>(in Vector3 currentPosition, List<T> objects, out float distance) where T : MonoBehaviour
     {

@@ -6,7 +6,7 @@ public class NavMeshHealMove : UnitStateNavMeshMove
     public override void Init()
     {
         Vector3 unitPosition = _unit.transform.position;
-        _nearestTower = MapInfo.Instance.GetNearestAllyTower(in unitPosition, _unit.isEnemy);
+        _nearestTower = MapInfo.Instance.GetNearestTower(in unitPosition, _unit.isEnemy);
         _agent.SetDestination(_nearestTower.transform.position);
     }
 
