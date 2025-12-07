@@ -1,36 +1,36 @@
 ﻿using System;
+using System.Collections;
 using UnityEngine;
 
 public class Health : MonoBehaviour
 {
-    [field: SerializeField] public float max { get; private set; } = 10f;
-    [SerializeField] private HealthUI _ui;
-    private float _current;
-    public event Action OnDied;
+    public Action<float> UpdateHealth;
+    [field: SerializeField] public float max { get; private set; } = 10f;  
+        
+    private float _current;    
 
     private void Start()
     {
-        _current = max;
-        _ui.UpdateHealth(max, _current);
+        _current = max;        
     }
 
     public void ApplyDamage(float value)
     {
         _current -= value;
-        if (_current <= 0)
-        {
-            _current = 0;
-            OnDied?.Invoke();
-        }                
+        if (_current < 0) _current = 0;
 
-        UpdateUI();
-
-        Debug.Log($"Объект {name}: было {_current + value}, стало {_current}");
+        UpdateHealth?.Invoke(_current);
     }
 
-    private void UpdateUI()
+    public void ApplyDelayDamage(float delay, float damage)
     {
-        _ui.UpdateHealth(max, _current);
+        StartCoroutine(DelayDamage(delay, damage));
+    }
+
+    private IEnumerator DelayDamage(float delay, float damage)
+    {
+        yield return new WaitForSeconds(delay);
+        ApplyDamage(damage);
     }
 }
 

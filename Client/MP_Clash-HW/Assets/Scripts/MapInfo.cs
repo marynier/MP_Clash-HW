@@ -25,19 +25,62 @@ public class MapInfo : MonoBehaviour
     [SerializeField] private List<Tower> _enemyTowers = new List<Tower>();
     [SerializeField] private List<Tower> _playerTowers = new List<Tower>();
 
-    [SerializeField] private List<Unit> _enemyUnits = new List<Unit>();
-    [SerializeField] private List<Unit> _playerUnits = new List<Unit>();
+    [SerializeField] private List<Unit> _enemyWalkingUnits = new List<Unit>();
+    [SerializeField] private List<Unit> _playerWalkingUnits = new List<Unit>();
 
-    public bool TryGetNearestUnit(in Vector3 currentPosition, bool enemy, out Unit unit, out float distance)
+    [SerializeField] private List<Unit> _enemyFlyUnits = new List<Unit>();
+    [SerializeField] private List<Unit> _playerFlyUnits = new List<Unit>();
+
+    private void Start()
     {
-        List<Unit> units = enemy ? _enemyUnits : _playerUnits;
+        SubscribeDestroy(_enemyTowers);
+        SubscribeDestroy(_playerTowers);
+        SubscribeDestroy(_enemyWalkingUnits);
+        SubscribeDestroy(_playerWalkingUnits);
+    }
+    public void AddUnit(Unit unit)
+    {
+        List<Unit> list;
+        if (unit.isEnemy) list = unit.parameters.isFly ? _enemyFlyUnits : _enemyWalkingUnits;
+        else list = unit.parameters.isFly ? _playerFlyUnits : _playerWalkingUnits;
+
+        AddObjectToList(list, unit);
+    }
+
+    public bool TryGetNearestAnyUnit(in Vector3 currentPosition, bool enemy, out Unit unit, out float distance)
+    {
+        TryGetNearestWalkingUnit(currentPosition, enemy, out Unit walking, out float walkingDistance);
+        TryGetNearestFlyUnit(currentPosition, enemy, out Unit fly, out float flyDistance);
+
+        if (flyDistance < walkingDistance)
+        {
+            unit = fly;
+            distance = flyDistance;
+        }
+        else
+        {
+            unit = walking;
+            distance = walkingDistance;
+        }
+
+        return unit;
+    }
+    public bool TryGetNearestWalkingUnit(in Vector3 currentPosition, bool enemy, out Unit unit, out float distance)
+    {
+        List<Unit> units = enemy ? _enemyWalkingUnits : _playerWalkingUnits;
+        unit = GetNearest(currentPosition, units, out distance);
+        return unit;
+    }
+    public bool TryGetNearestFlyUnit(in Vector3 currentPosition, bool enemy, out Unit unit, out float distance)
+    {
+        List<Unit> units = enemy ? _enemyFlyUnits : _playerFlyUnits;
         unit = GetNearest(currentPosition, units, out distance);
         return unit;
     }
 
     public Tower GetNearestTower(in Vector3 currentPosition, bool enemy)
     {
-        List<Tower> towers = enemy ? _enemyTowers: _playerTowers;        
+        List<Tower> towers = enemy ? _enemyTowers : _playerTowers;
         return GetNearest(currentPosition, towers, out float distance);
     }
 
@@ -60,15 +103,36 @@ public class MapInfo : MonoBehaviour
         return nearest;
     }
 
-    public void RemoveTower(Tower tower)
+    private void SubscribeDestroy<T>(List<T> objects) where T : IDestroyed
     {
-        if (_enemyTowers.Contains(tower)) _enemyTowers.Remove(tower);
-        if (_playerTowers.Contains(tower)) _playerTowers.Remove(tower);
+        for (int i = 0; i < objects.Count; i++)
+        {
+            T obj = objects[i];
+
+            void RemoveAndUnsubscribe()
+            {
+                RemoveObjectFromList(objects, obj);
+                obj.Destroyed -= RemoveAndUnsubscribe;
+            }
+
+            objects[i].Destroyed += RemoveAndUnsubscribe;
+        }
     }
 
-    public void RemoveUnit(Unit unit)
+    private void AddObjectToList<T>(List<T> list, T obj) where T : IDestroyed
     {
-        if (_enemyUnits.Contains(unit)) _enemyUnits.Remove(unit);
-        if (_playerUnits.Contains(unit)) _playerUnits.Remove(unit);
+        list.Add(obj);
+
+        void RemoveAndUnsubscribe()
+        {
+            RemoveObjectFromList(list, obj);
+            obj.Destroyed -= RemoveAndUnsubscribe;
+        }
+
+        obj.Destroyed += RemoveAndUnsubscribe;
+    }
+    private void RemoveObjectFromList<T>(List<T> list, T obj)
+    {
+        if (list.Contains(obj)) list.Remove(obj);
     }
 }

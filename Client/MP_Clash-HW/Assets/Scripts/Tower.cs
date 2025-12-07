@@ -1,25 +1,28 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 [RequireComponent(typeof(Health))]
-public class Tower : MonoBehaviour, IHealth
+public class Tower : MonoBehaviour, IHealth, IDestroyed
 {
+    public event Action Destroyed;
+
     [field: SerializeField] public Health health { get; private set; }
     [field: SerializeField] public float radius { get; private set; } = 2f;
+
     public float GetDistance(in Vector3 point) => Vector3.Distance(transform.position, point) - radius;
 
     private void Start()
     {
-        health.OnDied += Die;
+        health.UpdateHealth += CheckDestroy;
     }
 
-    private void OnDestroy()
+    private void CheckDestroy(float currentHP)
     {
-        health.OnDied -= Die;
-    }
+        if (currentHP > 0) return;
 
-    private void Die()
-    {
-        MapInfo.Instance.RemoveTower(this);
+        health.UpdateHealth -= CheckDestroy;
         Destroy(gameObject);
+
+        Destroyed?.Invoke();
     }
 }

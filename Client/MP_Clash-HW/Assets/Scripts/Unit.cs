@@ -1,12 +1,14 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
-[RequireComponent(typeof(UnitParameters), typeof(Health))]
-public class Unit : MonoBehaviour, IHealth
+[RequireComponent(typeof(UnitParameters), typeof(Health), typeof(UnitAnimation))]
+public class Unit : MonoBehaviour, IHealth, IDestroyed
 {
+    public event Action Destroyed;
     [field: SerializeField] public Health health { get; private set; }
     [field: SerializeField] public bool isEnemy { get; private set; } = false;
     [field: SerializeField] public UnitParameters parameters;
-
+    [SerializeField] private UnitAnimation _animation;
     [SerializeField] private UnitState _defaultStateSO;
     [SerializeField] private UnitState _chaseStateSO;
     [SerializeField] private UnitState _attackStateSO;
@@ -17,6 +19,22 @@ public class Unit : MonoBehaviour, IHealth
 
     private void Start()
     {
+        _animation.Init(this);
+
+        CreateStates();
+        _currentState = _defaultState;
+        _currentState.Init();
+
+        health.UpdateHealth += CheckDestroy;
+    }
+
+    private void Update()
+    {
+        _currentState.Run();
+    }
+
+    private void CreateStates()
+    {
         _defaultState = Instantiate(_defaultStateSO);
         _defaultState.Constructor(this);
 
@@ -25,22 +43,16 @@ public class Unit : MonoBehaviour, IHealth
 
         _attackState = Instantiate(_attackStateSO);
         _attackState.Constructor(this);
-
-        _currentState = _defaultState;
-        _currentState.Init();
-
-        health.OnDied += Die;
     }
 
-    private void OnDestroy()
+    private void CheckDestroy(float currentHP)
     {
-        if (health != null)
-            health.OnDied -= Die;
-    }
+        if (currentHP > 0) return;
 
-    private void Update()
-    {
-        _currentState.Run();
+        health.UpdateHealth -= CheckDestroy;
+        Destroy(gameObject);
+
+        Destroyed?.Invoke();
     }
 
     public void SetState(UnitStateType type)
@@ -64,15 +76,8 @@ public class Unit : MonoBehaviour, IHealth
         }
 
         _currentState.Init();
-    }
-
-    private void Die()
-    {
-        SetState(UnitStateType.Default);
-        MapInfo.Instance.RemoveUnit(this);
-
-        Destroy(gameObject);
-    }
+        _animation.SetState(type);
+    }        
 
 #if UNITY_EDITOR
     [Space(24)]
