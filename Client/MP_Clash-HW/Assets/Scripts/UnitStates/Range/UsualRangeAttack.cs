@@ -37,6 +37,6 @@ public class UsualRangeAttack : UnitStateAttack
         arrow.Init(targetPosition);
 
         float delay = Vector3.Distance(unitPosition, targetPosition) / arrow.speed;
-        _target.ApplyDelayDamage(delay, _damage);
+        _target.ApplyDelayDamage(delay, _actionValue);
     }
 }

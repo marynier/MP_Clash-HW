@@ -65,9 +65,11 @@ public class MapInfo : MonoBehaviour
 
         return unit;
     }
-    public bool TryGetNearestWalkingUnit(in Vector3 currentPosition, bool enemy, out Unit unit, out float distance)
+    public bool TryGetNearestWalkingUnit(in Vector3 currentPosition, bool enemy, out Unit unit, out float distance, Unit mapInfoCaller = null)
     {
         List<Unit> units = enemy ? _enemyWalkingUnits : _playerWalkingUnits;
+        if (units.Contains(mapInfoCaller)) units.Remove(mapInfoCaller);
+
         unit = GetNearest(currentPosition, units, out distance);
         return unit;
     }
@@ -78,9 +80,30 @@ public class MapInfo : MonoBehaviour
         return unit;
     }
 
+    public bool TryGetNearestWalkingAllyDamagedUnit(in Unit mapInfoCaller, in Vector3 currentPosition, bool isEnemyUnit, out Unit unit, out float distance)
+    {
+        List<Unit> source = isEnemyUnit ? _enemyWalkingUnits : _playerWalkingUnits;
+
+        List<Unit> damaged = new List<Unit>();
+        for (int i = 0; i < source.Count; i++)
+        {
+            if (source[i] == null || source[i] == mapInfoCaller) continue;
+            if (source[i].health.isHealthful == false)
+                damaged.Add(source[i]);
+        }
+        unit = GetNearest(currentPosition, damaged, out distance);
+        return unit;
+    }
+
     public Tower GetNearestTower(in Vector3 currentPosition, bool enemy)
     {
         List<Tower> towers = enemy ? _enemyTowers : _playerTowers;
+        return GetNearest(currentPosition, towers, out float distance);
+    }
+
+    public Tower GetNearestAllyTower(in Vector3 currentPosition, bool isEnemyUnit)
+    {
+        List<Tower> towers = isEnemyUnit ? _enemyTowers : _playerTowers ;
         return GetNearest(currentPosition, towers, out float distance);
     }
 

@@ -1,12 +1,11 @@
 ﻿using UnityEngine;
 
-
 public abstract class UnitStateAttack : UnitState
 {
-    [SerializeField] protected float _damage = 1.5f;
-    private float _delay = 1f;
-    private float _time = 0f;
-    private float _stopAttackDistance = 0;
+    [SerializeField] protected float _actionValue = 1.5f;
+    protected float _delay = 1f;
+    protected float _time = 0f;
+    protected float _stopAttackDistance = 0;
     protected bool _targetIsEnemy;
     protected Health _target;
 
@@ -50,7 +49,7 @@ public abstract class UnitStateAttack : UnitState
 
     protected virtual void Attack()
     {
-        _target.ApplyDamage(_damage);
+        _target.ApplyDamage(_actionValue);
     }
 
     public override void Finish()

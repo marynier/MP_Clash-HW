@@ -3,7 +3,7 @@ using UnityEngine.AI;
 
 public abstract class UnitStateNavMeshMove : UnitState
 {
-    private NavMeshAgent _agent;
+    protected NavMeshAgent _agent;
     protected bool _targetIsEnemy;
     protected Tower _nearestTower;
 
@@ -33,6 +33,7 @@ public abstract class UnitStateNavMeshMove : UnitState
         if (TryFindTarget(out UnitStateType changeType))
             _unit.SetState(changeType);
     }
+
     public override void Finish()
     {
         _agent.SetDestination(_unit.transform.position);

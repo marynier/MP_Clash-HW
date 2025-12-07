@@ -2,10 +2,9 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-
 public abstract class UnitStateNavMeshChase : UnitState
 {
-    private NavMeshAgent _agent;
+    protected NavMeshAgent _agent;
     protected bool _targetIsEnemy;
     protected Unit _targetUnit;
     protected float _startAttackDistance = 0;
@@ -33,7 +32,6 @@ public abstract class UnitStateNavMeshChase : UnitState
 
         _startAttackDistance = _unit.parameters.startAttackDistance + _targetUnit.parameters.modelRadius;
     }
-
 
     public override void Run()
     {

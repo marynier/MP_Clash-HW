@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 
 [CreateAssetMenu(fileName = "_UsualTowerAttack", menuName = "UnitState/UsualTowerAttack")]
-
 public class UsualTowerAttack : UnitStateAttack
 {
     protected override bool TryFindTarget(out float stopAttackDistance)

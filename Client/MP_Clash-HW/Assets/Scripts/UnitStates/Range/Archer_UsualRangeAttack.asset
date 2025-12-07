@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b6f34bb9378e8064aac99041ec3c090b, type: 3}
   m_Name: Archer_UsualRangeAttack
   m_EditorClassIdentifier: Assembly-CSharp::UsualRangeAttack
-  _damage: 1.5
-  _arrow: {fileID: 0}
+  _actionValue: 1.5
+  _arrow: {fileID: 7063091593574838157, guid: 2b0ac45575596b54389629d8d9a43567, type: 3}
