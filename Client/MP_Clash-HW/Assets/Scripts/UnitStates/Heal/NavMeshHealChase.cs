@@ -3,7 +3,7 @@
 [CreateAssetMenu(fileName = "_NavMeshHealChase", menuName = "UnitState/NavMeshHealChase")]
 public class NavMeshHealChase : UnitStateNavMeshChase
 {
-    bool _targetIsDamaged;
+    private bool _targetIsDamaged;
     public override void Init()
     {
         base.Init();
