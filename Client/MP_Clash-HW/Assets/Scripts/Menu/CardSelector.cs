@@ -4,6 +4,7 @@ using UnityEngine;
 public class CardSelector : MonoBehaviour
 {
     [SerializeField] private DeckManager _deckManager;
+    [SerializeField] private DeckSaver _deckSaver;
     [SerializeField] private AvailableDeckUI _availableDeckUI;
     [SerializeField] private SelectedDeckUI _selectedDeckUI;
     private List<Card> _availableCards = new List<Card>();
@@ -13,6 +14,34 @@ public class CardSelector : MonoBehaviour
     private int _selectToggleIndex = 0;
 
     private void OnEnable()
+    {
+        UpdateCards();
+    }
+
+    public void SetSelectToggleIndex(int index)
+    {
+        _selectToggleIndex = index;
+    }
+
+    public void SelectCard(int cardID)
+    {
+        _selectedCards[_selectToggleIndex] = _availableCards[cardID - 1];
+        _selectedDeckUI.UpdateCardsList(SelectedCards);
+        _availableDeckUI.UpdateCardsList(AvailableCards, SelectedCards);
+    }
+
+    public void OnSaveButton()
+    {
+        _deckManager.ApplySelectedChanges(_selectedCards);        
+    }
+
+    public void OnCancelButton()
+    {
+        UpdateCards();
+        _deckManager.UpdateListsActions();
+    }
+
+    private void UpdateCards()
     {
         _availableCards.Clear();
         for (int i = 0; i < _deckManager.AvailableCards.Count; i++)
@@ -26,15 +55,11 @@ public class CardSelector : MonoBehaviour
         }
     }
 
-    public void SetSelectToggleIndex(int index)
+    public int[] GetSelectedCardIds()
     {
-        _selectToggleIndex = index;
-    }
-
-    public void SelectCard(int cardID)
-    {
-        _selectedCards[_selectToggleIndex] = _availableCards[cardID-1];
-        _selectedDeckUI.UpdateCardsList(SelectedCards);
-        _availableDeckUI.UpdateCardsList(AvailableCards, SelectedCards);
+        int[] ids = new int[_selectedCards.Count];
+        for (int i = 0; i < _selectedCards.Count; i++)
+            ids[i] = _selectedCards[i].id;
+        return ids;
     }
 }

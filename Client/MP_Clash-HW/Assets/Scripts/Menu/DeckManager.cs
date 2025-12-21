@@ -35,9 +35,22 @@ public class DeckManager : MonoBehaviour
             _selectedCards.Add(_cards[selectedCardIndexes[i]]);
         }
 
-        UpdateAvailable?.Invoke(AvailableCards, SelectedCards);
+        UpdateListsActions();
+    }
+
+    public void ApplySelectedChanges(List<Card> newSelectedCards)
+    {
+        _selectedCards.Clear();
+        _selectedCards.AddRange(newSelectedCards);
+
         UpdateSelected?.Invoke(SelectedCards);
     }
+
+    public void UpdateListsActions()
+    {
+        UpdateAvailable?.Invoke(AvailableCards, SelectedCards);
+        UpdateSelected?.Invoke(SelectedCards);
+    }    
 }
 
 [System.Serializable]
