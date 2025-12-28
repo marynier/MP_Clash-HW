@@ -5,6 +5,7 @@ using UnityEngine.UI;
 public class RatingManager : MonoBehaviour
 {
     [SerializeField] private Text _ratingText;
+
     private void Start()
     {
         InitRating();
@@ -20,6 +21,7 @@ public class RatingManager : MonoBehaviour
 
         Network.Instance.Post(uri, data, Success, Error);
     }
+
     private void Error(string obj)
     {
         Debug.LogError(obj);

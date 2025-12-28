@@ -84,7 +84,6 @@ public class Unit : MonoBehaviour, IHealth, IDestroyed
 #if UNITY_EDITOR
     [Space(24)]
     [SerializeField] private bool _debug = false;
-
     private void OnDrawGizmos()
     {
         if (_debug == false) return;

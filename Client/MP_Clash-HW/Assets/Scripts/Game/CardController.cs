@@ -21,7 +21,6 @@ public class CardController : MonoBehaviour, IDragHandler, IBeginDragHandler, IE
 
     public void SetSprite(Sprite sprite) => _image.sprite = sprite;
 
-
     public void OnBeginDrag(PointerEventData eventData)
     {
         if (false) return; //если маны не хватает

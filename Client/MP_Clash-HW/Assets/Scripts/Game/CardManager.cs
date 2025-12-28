@@ -60,7 +60,6 @@ public class CardManager : MonoBehaviour
 
         for (int i = 0; i < length; i++) ids[i] = tempArr[arr[i]];
     }
-
     public void Release(int controllerIndex, in Vector3 screenPointPosition)
     {
         if (TryGetSpawnPoint(screenPointPosition, out Vector3 spawnPoint) == false) return;
@@ -78,7 +77,6 @@ public class CardManager : MonoBehaviour
         _multiplayerManager.SendUnitSpawn(id, spawnPoint);
     }
 
-
     private bool TryGetSpawnPoint(Vector3 screenPointPosition, out Vector3 spawnPoint)
     {
         Ray ray = _camera.ScreenPointToRay(screenPointPosition);
@@ -92,6 +90,5 @@ public class CardManager : MonoBehaviour
 
         spawnPoint = Vector3.zero;
         return false;
-
     }
 }

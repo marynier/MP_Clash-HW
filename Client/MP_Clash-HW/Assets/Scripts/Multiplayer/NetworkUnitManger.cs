@@ -10,6 +10,7 @@ public class NetworkUnitManger : MonoBehaviour
         _multiplayerManager = MultiplayerManager.Instance;
         _multiplayerManager.OnEnemyUnitSpawned += SpawnEnemyUnit;
     }
+
     private void OnDestroy()
     {
         _multiplayerManager.OnEnemyUnitSpawned -= SpawnEnemyUnit;

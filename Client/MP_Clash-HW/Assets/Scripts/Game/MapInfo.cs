@@ -18,7 +18,7 @@ public class MapInfo : MonoBehaviour
 
     private void OnDestroy()
     {
-        if(Instance == this) Instance = null;
+        if (Instance == this) Instance = null;
     }
     #endregion
 
@@ -38,6 +38,7 @@ public class MapInfo : MonoBehaviour
         SubscribeDestroy(_enemyWalkingUnits);
         SubscribeDestroy(_playerWalkingUnits);
     }
+
     public void AddUnit(Unit unit)
     {
         List<Unit> list;
@@ -65,6 +66,7 @@ public class MapInfo : MonoBehaviour
 
         return unit;
     }
+
     public bool TryGetNearestWalkingUnit(in Vector3 currentPosition, bool enemy, out Unit unit, out float distance, Unit mapInfoCaller = null)
     {
         List<Unit> units = enemy ? _enemyWalkingUnits : _playerWalkingUnits;
@@ -73,6 +75,7 @@ public class MapInfo : MonoBehaviour
         unit = GetNearest(currentPosition, units, out distance);
         return unit;
     }
+
     public bool TryGetNearestFlyUnit(in Vector3 currentPosition, bool enemy, out Unit unit, out float distance)
     {
         List<Unit> units = enemy ? _enemyFlyUnits : _playerFlyUnits;
@@ -99,7 +102,7 @@ public class MapInfo : MonoBehaviour
     {
         List<Tower> towers = enemy ? _enemyTowers : _playerTowers;
         return GetNearest(currentPosition, towers, out float distance);
-    }   
+    }
 
     private T GetNearest<T>(in Vector3 currentPosition, List<T> objects, out float distance) where T : MonoBehaviour
     {
@@ -135,7 +138,7 @@ public class MapInfo : MonoBehaviour
             objects[i].Destroyed += RemoveAndUnsubscribe;
         }
     }
-
+    
     private void AddObjectToList<T>(List<T> list, T obj) where T : IDestroyed
     {
         list.Add(obj);
