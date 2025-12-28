@@ -16,7 +16,7 @@ public class UserInfo : MonoBehaviour
     }
     #endregion
 
-    public int ID { get; private set; }
+    public int ID { get; private set; } = 7;
     public void SetID(int id)
     {
         ID = id;

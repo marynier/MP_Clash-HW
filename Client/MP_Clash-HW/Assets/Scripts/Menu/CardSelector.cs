@@ -4,7 +4,6 @@ using UnityEngine;
 public class CardSelector : MonoBehaviour
 {
     [SerializeField] private DeckManager _deckManager;
-    [SerializeField] private DeckSaver _deckSaver;
     [SerializeField] private AvailableDeckUI _availableDeckUI;
     [SerializeField] private SelectedDeckUI _selectedDeckUI;
     private List<Card> _availableCards = new List<Card>();
@@ -15,7 +14,21 @@ public class CardSelector : MonoBehaviour
 
     private void OnEnable()
     {
-        UpdateCards();
+        FillListFromManager();
+    }
+
+    private void FillListFromManager()
+    {
+        _availableCards.Clear();
+        for (int i = 0; i < _deckManager.AvailableCards.Count; i++)
+        {
+            _availableCards.Add(_deckManager.AvailableCards[i]);
+        }
+        _selectedCards.Clear();
+        for (int i = 0; i < _deckManager.SelectedCards.Count; i++)
+        {
+            _selectedCards.Add(_deckManager.SelectedCards[i]);
+        }
     }
 
     public void SetSelectToggleIndex(int index)
@@ -30,36 +43,26 @@ public class CardSelector : MonoBehaviour
         _availableDeckUI.UpdateCardsList(AvailableCards, SelectedCards);
     }
 
-    public void OnSaveButton()
+    public void SaveChanges()
     {
-        _deckManager.ApplySelectedChanges(_selectedCards);        
+        _deckManager.ChangesDeck(SelectedCards, CloseChangesWindow);
     }
 
-    public void OnCancelButton()
+    public void CancelChanges()
     {
-        UpdateCards();
-        _deckManager.UpdateListsActions();
+        FillListFromManager();
+        _selectedDeckUI.UpdateCardsList(SelectedCards);
+        _availableDeckUI.UpdateCardsList(AvailableCards, SelectedCards);
+        CloseChangesWindow();
     }
 
-    private void UpdateCards()
-    {
-        _availableCards.Clear();
-        for (int i = 0; i < _deckManager.AvailableCards.Count; i++)
-        {
-            _availableCards.Add(_deckManager.AvailableCards[i]);
-        }
-        _selectedCards.Clear();
-        for (int i = 0; i < _deckManager.SelectedCards.Count; i++)
-        {
-            _selectedCards.Add(_deckManager.SelectedCards[i]);
-        }
-    }
+    [Space(24), Header("Логика переключения канвасов")]
+    [SerializeField] private GameObject _mainCanvas;
+    [SerializeField] private GameObject _cardSelectCanvas;
 
-    public int[] GetSelectedCardIds()
+    public void CloseChangesWindow()
     {
-        int[] ids = new int[_selectedCards.Count];
-        for (int i = 0; i < _selectedCards.Count; i++)
-            ids[i] = _selectedCards[i].id;
-        return ids;
+        _mainCanvas.SetActive(true);
+        _cardSelectCanvas.SetActive(false);
     }
 }
