@@ -32,6 +32,10 @@ export class StateHandlerRoom extends Room<State> {
             console.log("StateHandlerRoom received message from", client.sessionId, ":", data);
             //this.state.movePlayer(client.sessionId, data);
         });
+
+        this.onMessage("SpawnUnit", (client, data) => {
+            this.broadcast("SpawnUnit", data, { except: client });
+        });
     }
     
     gameIsStarted: boolean = false;

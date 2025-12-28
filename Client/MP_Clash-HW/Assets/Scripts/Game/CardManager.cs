@@ -9,6 +9,7 @@ public class CardManager : MonoBehaviour
     [SerializeField] private Image _nextCardImage;
     [SerializeField] private int _layerIndex = 8;
     private CardsInGame _cardsInGame;
+    private MultiplayerManager _multiplayerManager;
     private string[] _ids;
     private Camera _camera;
     private List<string> _freeCardsID;
@@ -19,6 +20,7 @@ public class CardManager : MonoBehaviour
         _ids = new string[_cardControllers.Length];
         _camera = Camera.main;
         _cardsInGame = CardsInGame.Instance;
+        _multiplayerManager = MultiplayerManager.Instance;
         _freeCardsID = _cardsInGame.GetAllID();
 
         MixList(_freeCardsID);
@@ -72,7 +74,10 @@ public class CardManager : MonoBehaviour
         SetNextRandom();
 
         FindFirstObjectByType<Spawner>().Spawn(id, spawnPoint, false);
+
+        _multiplayerManager.SendUnitSpawn(id, spawnPoint);
     }
+
 
     private bool TryGetSpawnPoint(Vector3 screenPointPosition, out Vector3 spawnPoint)
     {
